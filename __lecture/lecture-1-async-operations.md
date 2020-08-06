@@ -48,10 +48,15 @@ const App = () => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    fetch("/some-data")
+    fetch("/some-data");
+    dispatch(startRequestingData())
       .then((res) => res.json())
-      .then((data) => {})
-      .catch((err) => {});
+      .then((data) => {
+        dispatch(receiveData(data));
+      })
+      .catch((err) => {
+        failtoretrieveData(err);
+      });
   };
 
   return <button onClick={handleClick}>Do something</button>;
@@ -85,13 +90,13 @@ const App = () => {
     fetch("/hockey")
       .then((res) => res.json())
       .then((scores) => {
-        // TODO
+        dispatch(receiveHockey(scores));
       });
 
     fetch("/baseball")
       .then((res) => res.json())
       .then((scores) => {
-        // TODO
+        dispatch(receivebaseball(scores));
       });
   }, []);
 
@@ -120,13 +125,15 @@ const App = () => {
   React.useEffect(() => {
     // Dispatch `receiveAllScores` after BOTH fetches have completed
 
-    fetch("/hockey").then((scores) => {
+    const hockeyPromise = fetch("/hockey").then((scores) => {
       dispatch(receiveHockeyScores(scores));
     });
 
-    fetch("/baseball").then((scores) => {
+    const baseballPromise = fetch("/baseball").then((scores) => {
       dispatch(receiveBaseballScores(scores));
     });
+
+    promise.all([hockey, baseball]).then(() => dispatch(receiveAlldata()));
   }, []);
 
   return <Scores />;
