@@ -1,9 +1,14 @@
 import React, { Component } from "react";
+import { useSelector } from "react-redux";
 
-class ArtistRoute extends Component {
-  render() {
-    return <div>Artist go here </div>;
-  }
-}
+const ArtistRoute = () => {
+  const accessToken = useSelector((state) => {
+    console.log(state);
+
+    return state.auth.token;
+  });
+
+  return accessToken;
+};
 
 export default ArtistRoute;
